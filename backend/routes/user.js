@@ -1,4 +1,6 @@
 const express=require('express');
+const app=express();
+app.use(express.json());
 const Userrouter=express.Router();
 const jwt=require('jsonwebtoken');
 const zod=require('zod');
@@ -17,11 +19,12 @@ const signupSchema=zod.object({
 
 //Route for new user
 Userrouter.post('/signup',async(req,res)=>{
-    const {inputs}=signupSchema.safeParse(req.body);
+    const inputs=signupSchema.safeParse(req.body);
     if(!inputs.success){
         res.json({
             msg:"Invalid inputs/Email already registered"
         })
+        return;
     }
     const exists=await User.findOne({username:inputs.data.username});
     if(exists){
@@ -31,7 +34,7 @@ Userrouter.post('/signup',async(req,res)=>{
         username:inputs.data.username,
         password:inputs.data.password,
         firstName:inputs.data.firstName,
-        lastName:inputs.data.lastName.lastName
+        lastName:inputs.data.lastName
     });
     const userId=newUser._id;
     const token=jwt.sign({userId},JWT_SECRET);

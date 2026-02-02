@@ -1,10 +1,12 @@
 const express=require('express');
-const UserRouter=require('./routes/user');
+const {Userrouter}=require('./routes/user');
+const app=express();
+
 const cors=require('cors');
 app.use(cors());
 
-const app=express();
 app.use(express.json());
-app.use('/api/v1/user',UserRouter);
+
+app.use('/api/v1/user',Userrouter);
 
 app.listen(3000,()=>console.log('Server connected at 3000'));

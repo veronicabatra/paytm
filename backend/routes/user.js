@@ -5,7 +5,7 @@ const Userrouter=express.Router();
 const jwt=require('jsonwebtoken');
 const zod=require('zod');
 const {JWT_SECRET}=require('../config');
-const {User}=require('../db/db');
+const {User,Account}=require('../db/db');
 const {UserMiddleware}=require('../middleware/user');
 
 //Zod Schema
@@ -36,12 +36,19 @@ Userrouter.post('/signup',async(req,res)=>{
         firstName:inputs.data.firstName,
         lastName:inputs.data.lastName
     });
-    const userId=newUser._id;
+    const userId=newUser._id; //userId from the database 
     const token=jwt.sign({userId},JWT_SECRET);
     await newUser.save();
+
+
+    //Give a random value here so that user can see some balance in his account and we dont have to integrate payment gateway here
+    await Account.create({
+        userId:userId,
+        amount:Math.random()*10000
+    })
     res.status(200).json({
         msg:"User registered successfully",
-        token:token
+        token:token,
     });
 });
 

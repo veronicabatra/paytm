@@ -32,7 +32,13 @@ accountRouter.post('/transfer',UserMiddleware,async(req,res)=>{
         res.status(400).json({msg:"Insufficient Balance"});
         return;
     }
-    const accountTo=await Account.findOne({userId:to}).session(session);
+    const Accountto=await User.findOne({username:to});
+    if(!Accountto){
+        session.abortTransaction();
+        res.status(400).json({msg:"Recipient user not found"});
+        return;
+    }
+    const accountTo=await Account.findOne({userId:Accountto._id}).session(session);
     if(!accountTo){
         session.abortTransaction();
         res.status(400).json({msg:"Recipient account not found"});

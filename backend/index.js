@@ -1,7 +1,7 @@
 const express=require('express');
+const app=express();
 const {Userrouter}=require('./routes/user');
 const {accountRouter}=require('./routes/account');
-const app=express();
 
 const cors=require('cors');
 app.use(cors());

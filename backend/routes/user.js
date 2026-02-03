@@ -96,7 +96,7 @@ const updateUSer=zod.object({
 
 //Route to update user details
 Userrouter.put('/',UserMiddleware,async(req,res)=>{
-    const success=updateUSer.safeParse(req.body);
+    const success=updateUser.safeParse(req.body);
     if(!success.success){
         res.status(400).json({msg:"Invalid inputs"});
         return;
